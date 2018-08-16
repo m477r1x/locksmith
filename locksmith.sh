@@ -3,7 +3,7 @@ set -ex
 Echo "Please enter AWS Username:"
 read user
 
-for account in $(cat ~/.aws/credentials  | grep '\[.*\]' | grep -v '^\[180374546468' |  tr -d '[]'); do 
+for account in $(cat ~/.aws/credentials  | grep '\[.*\]' |  tr -d '[]'); do 
 OldKeyID=$(aws iam list-access-keys --user $user --query "AccessKeyMetadata[?CreateDate<='$(date +%F),AccessKeyId']" --output text --profile $account | awk '{print $1}');
 aws iam create-access-key --user-name $user --output text --profile $account | awk '{print "['$account']\n""aws_access_key_id = "$2"\n""aws_secret_access_key = "$4"\n"}' >> /tmp/credentials
 if [ $? -eq 0 ]; then
