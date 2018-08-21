@@ -1,12 +1,12 @@
 #!/bin/bash
-set -ex
 Echo "Please enter AWS Username:"
 read user
 
 for account in $(cat ~/.aws/credentials | grep '\[.*\]' |  tr -d '[]'); do 
 OldKeyID=$(aws iam list-access-keys --user $user --query "AccessKeyMetadata[?CreateDate<='$(date +%F),AccessKeyId']" --output text --profile $account | awk '{print $1}');
-aws sts get-caller-identity --profile $account
-if [$? -eq 0 ]; then
+aws sts get-caller-identity --profile $account --output text | awk '{print "Current Access Key "$3" for account: '$account' is valid, beginning rotation"}'
+if [ $? -eq 0 ]; then
+	echo "doing the shit"
 	aws iam create-access-key --user-name $user --output text --profile $account | awk '{print "['$account']\n""aws_access_key_id = "$2"\n""aws_secret_access_key = "$4"\n"}' >> /tmp/credentials
 		if [ $? -eq 0 ]; then
 			echo "Successfully created new key in "$account
@@ -43,3 +43,4 @@ if [$? -eq 0 ]; then
 else 
 	echo "Your current key for "$account" does not work, this needs fixing manually before you continue"
 fi;
+done
