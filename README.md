@@ -9,7 +9,7 @@ This script will run through each of your profiles in your .aws/credentials file
 
 The script builds a new credentials file in the /tmp directory and then overwrites your current credentials file inside .aws/ once it has finished. Any accounts which errored may not appear in the new credentials file so you will need to add them manually once you have checked them in the AWS console as to why they failed (usually because there are 2 keys already present, or your current keys are not valid).
 
-Usage:
+## Usage:
 ./locksmith <aws username>
 
 
