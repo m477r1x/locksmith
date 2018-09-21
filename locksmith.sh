@@ -1,7 +1,6 @@
 #!/bin/bash
 user=$1
 
-
 cp ~/.aws/credentials ~/.aws/oldcredentials.backup
 for account in $(cat ~/.aws/credentials | grep '\[.*\]' |  tr -d '[]'); do 
 	aws iam get-user --user-name $user --profile $account
@@ -31,11 +30,11 @@ newcreds=$(aws iam create-access-key --user-name $user --output text --profile $
  			fi;
 	else
 		tput bold
-		echo No such user in this account!
+		echo Unable to retrieve user, either no user exists or keys are invalid for account: $account
 		tput sgr0
 	fi;
 
-	done
+	done >> ~/.aws/locksmith.log
 		tput bold
 		echo "Updating credentials file"
 		tput sgr0
