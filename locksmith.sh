@@ -1,6 +1,5 @@
 #!/bin/bash
-Echo "Please enter AWS Username:"
-read user
+user=$1
 
 
 cp ~/.aws/credentials ~/.aws/oldcredentials.backup
