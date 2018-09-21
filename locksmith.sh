@@ -3,7 +3,7 @@ Echo "Please enter AWS Username:"
 read user
 
 
-#cp ~/.aws/credentials ~/.aws/oldcredentials.backup
+cp ~/.aws/credentials ~/.aws/oldcredentials.backup
 for account in $(cat ~/.aws/credentials | grep '\[.*\]' |  tr -d '[]'); do 
 	aws iam get-user --user-name $user --profile $account
 	if [ $? -eq 0 ]; then
@@ -22,8 +22,8 @@ newcreds=$(aws iam create-access-key --user-name $user --output text --profile $
  		AWS_ACCESS_KEY_ID=${newaccesskey} AWS_SECRET_ACCESS_KEY=${newsecretkey} aws sts get-caller-identity
 			if [ $? -eq 0 ]; then
  				echo "Successful"
- 				#echo "Deleting old access key from "$account
-				#aws iam delete-access-key --access-key-id $OldKeyID --user-name $user --profile $account;
+ 				echo "Deleting old access key from "$account
+				aws iam delete-access-key --access-key-id $OldKeyID --user-name $user --profile $account;
  				echo "Key rotated for account: "$account
  			else 
  				tput bold
@@ -37,14 +37,14 @@ newcreds=$(aws iam create-access-key --user-name $user --output text --profile $
 	fi;
 
 	done
-		# tput bold
-		# echo "Updating credentials file"
-		# tput sgr0
-		# mv /tmp/credentials ~/.aws/credentials
-		# 	if [ $? -eq 0 ]; then
-		# 	echo "Credentials file updated"
-		# else
-		# 	tput bold
-		# 	echo "Failed to update new credentials file, check /tmp/credentials"
-		# 	tput sgr0
-		# fi;
+		tput bold
+		echo "Updating credentials file"
+		tput sgr0
+		mv /tmp/credentials ~/.aws/credentials
+			if [ $? -eq 0 ]; then
+			echo "Credentials file updated"
+		else
+			tput bold
+			echo "Failed to update new credentials file, check /tmp/credentials"
+			tput sgr0
+		fi;
